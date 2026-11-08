@@ -1,0 +1,2 @@
+import {defineConfig,devices} from '@playwright/test';
+export default defineConfig({testDir:'./tests',timeout:30000,workers:2,use:{baseURL:'http://127.0.0.1:4187/fluffie-eet/'},projects:[{name:'ipad-webkit',use:{...devices['iPad (gen 7)'],browserName:'webkit'}},{name:'desktop-chromium',use:{...devices['Desktop Chrome']}}],webServer:{command:'node scripts/serve.mjs',url:'http://127.0.0.1:4187/fluffie-eet/',reuseExistingServer:false}});

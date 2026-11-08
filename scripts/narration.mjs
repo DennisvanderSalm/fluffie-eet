@@ -1,0 +1,21 @@
+import { activities, sources } from '../src/content.ts';
+import { learning } from '../src/learning.ts';
+import { writeFileSync } from 'node:fs';
+const clips = {
+ home: 'Hoi! Ik ben Fluffie. Welkom bij Fluffie eet. Samen kijken, ruiken, voelen en iets maken. Dit doe je samen met een volwassene. Tik op Samen ontdekken om te beginnen. Na een kort schermmoment gaan jullie in de keuken verder. Proeven mag. Niets moet.',
+ level: 'Wat past bij jullie? Kies samen een niveau. Vier tot vijf jaar: kijken, aanwijzen en ontdekken. Zes tot acht jaar: voorspellen, vergelijken en vertellen. Je kunt dit later veranderen. Tik daarna op Naar de ontdekkingen.',
+ activities: 'Wat ontdekken jullie vandaag? Kies samen één van de drie ontdekkingen. Komkommeronderzoekers: kijken en voelen. Hallo, bekende groente: ruiken en vergelijken. Of samen een boterham maken. Bij iedere ontdekking leren jullie iets over gezonde voeding. Daarna gaan jullie zelf aan de slag. Je hoeft niets lekker te vinden. Nieuwsgierig zijn is genoeg.',
+ closed: 'Voor nu is het genoeg. Het scherm mag uit. Er is buiten de app nog van alles te ontdekken. Je hoeft niets af te maken. Fijn dat jullie samen iets hebben ontdekt.',
+};
+for (const [i,a] of activities.entries()) {
+ clips[`${a.id}-prep`] = `${a.title.replace('\n',' ')}. Samen voorbereiden. Een volwassene doet de hele activiteit mee. Leg samen klaar: ${a.needs} Fijn en veilig ontdekken: ${a.safety} Een tip voor de volwassene: ${a.tip} Vink aan als je als volwassene meedoet en de voorbereiding hebt gecontroleerd. Tik daarna op We zijn er samen klaar voor.`;
+ for(const level of ['young','older']){
+  const c=a[level];
+  clips[`${a.id}-${level}-discover`] = `${c.question} Je kunt kiezen: ${c.choices.join('. Of: ')}. ${c.response} Tik daarna op Samen verder praten. Je kunt ook stoppen voor nu.`;
+  clips[`${a.id}-${level}-talk`] = `Een weetje voor aan tafel. ${learning[i][level]} Bespreek het samen. ${learning[i].talk} Voor de ouder: ${learning[i].parent} Tik op Naar onze opdracht zonder scherm als jullie verder willen. Stoppen mag ook.`;
+  clips[`${a.id}-${level}-offline`] = `Scherm uit. Samen verder. ${c.offline} Jullie hoeven niets af te vinken of terug te komen. Veel plezier samen!`;
+ }
+}
+clips.parents='Voor ouders en verzorgers. Samen ontdekken, zonder haast. Fluffie geeft het zetje. Jullie maken het moment. Probeer drie weken lang ongeveer twee momenten per week. Herhalen mag. Overslaan ook. Kind en ouder leren over gezonde voeding; een leeg bord is niet het doel. Kies vier tot vijf jaar voor concrete vragen of zes tot acht jaar om meer te vergelijken. Iedere activiteit vraagt een volwassene die echt meedoet. Er is een printbare observatiekaart. De dagelijkse grens is tien minuten, gedeeld door alle kinderen en tabbladen in deze browser. De ouderomgeving telt niet mee. De app pauzeert als hij niet zichtbaar is. Een ander apparaat of gewiste browsergegevens kan de limiet omzeilen. We bewaren alleen het niveau en de dagelijkse schermtijd. Geen accounts, namen, foto’s, microfoon, advertenties, tracking of externe AI-verzoeken. De website en geluidsbestanden laden via GitHub Pages. De hosting kan verbindingsgegevens verwerken. Het adres is openbaar. Er is geen synchronisatie of gegarandeerde offline beschikbaarheid. Met Wis lokale gegevens verwijder je het niveau en de tijdregistratie. Dit vraagt een bevestiging. Beschrijf wat je zelf merkt, geef ruimte om te kiezen en laat proeven vrijwillig. Respecteer gevoeligheid voor geur en structuur. Vraag bij zorgen over eten of groei advies aan een passende zorgverlener. Fluffie is een getekend personage, geen chatvriend. De stem is vooraf opgenomen met AI. Er worden geen gesprekken gevoerd of opnames gemaakt. De bronnen zijn gecontroleerd op acht november tweeduizendzesentwintig. Deze proef is geen bewezen gezondheidsinterventie en is nog niet beoordeeld door een kinderdiëtist. De tienminutengrens en leeftijdsniveaus zijn ontwerpkeuzes. '+sources.map(s=>s.title+'. '+s.note).join(' ')+' De leerdoelen staan per activiteit uitgewerkt. Onderhoud: controleer vóór inhoudelijke releases en vervolgens ieder kwartaal opnieuw. Nieuwe bevindingen wegen we naast bestaand bewijs.';
+writeFileSync('audio-scripts.json',JSON.stringify(clips,null,2)+'\n');
+console.log(`${Object.keys(clips).length} clips, ${Object.values(clips).join('').length} tekens`);
